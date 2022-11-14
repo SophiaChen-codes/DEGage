@@ -64,7 +64,7 @@ DEGage <- function(counts, group, perm.preprocess = TRUE, gene.filter.threshold 
   if(!perm.preprocess){
     for(i in 1:nrow(outputdf)){
       if( (is.na(outputdf[i,]$pval)) | (outputdf[i,]$pval < permresultdf[i,]$pval)){
-        #outputdf[i,]$pval = permresultdf[i,]$pval
+        outputdf[i,]$pval = permresultdf[i,]$pval
       }
     }
   }
