@@ -33,3 +33,40 @@ Simulates counts following a negative binomial distribution with predefined leve
 - `prop.zeros`: A value between 0-1 that specifies the proportion of dropouts to be added to each gene  
 - `seed`: Specify a seed for random generation to generate a reproducible matrix  
 ## Example Usage
+#### Differential Expression Analysis with DEGage
+As an example case, we will use a scRNA-seq dataset from Rao-Ruiz et. al that contains 38 neurons from the denate gyrus of *Mus musculus*. For this study, we would like to examine differential expression between dVenus+/- cells from the fear condtioned (FC) mice.  
+First, we will load in the DEGage library, as well as stringi for some basic string manipulation
+```
+library(DEGageAP)
+library(stringi)
+```
+Next, we will retrieve the Rao-Ruiz dataset from the GEO
+```
+url <- "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE129nnn/GSE129024/suppl/GSE129024_counts_per_gene_sample.txt.gz"
+tmp <- tempfile()
+download.file(url, tmp)
+counts <- read.delim(gzfile(tmp), sep = "\t")
+```
+Next, we will isolate the desired conditions and compile them into a new dataframe
+```
+#Isolating FC Neurons
+FCcounts <- counts[,substr(colnames(counts), 1, 2)=="FC"]
+#dVenus+ Neurons
+dvenus.pos <- FCcounts[,substr(colnames(FCcounts), 4,4) == "G"]
+#dVenus- Neurons
+dvenus.neg <- FCcounts[,substr(colnames(FCcounts),4,4)=="N"]
+FCcounts <- cbind(dvenus.neg, dvenus.pos)
+```
+Now, we will generate the factor for DEGage's "group" parameter
+```
+groups <- c(rep(1, ncol(dvenus.neg)),rep(2,ncol(dvenus.pos)))
+groups <- factor(groups)
+```
+Next we will run DEGage
+```
+DEGage.Results <- DEGage(counts = FCcounts, group = groups)
+```
+DEGage.Results now contains a dataframe containng the NB regression outputs (mu, r, and p), a p-value, and an FDR for each gene.  
+##### Some Important Notes:
+- While perm.preprocess = TRUE, the dataframe returned from DEGage will likely contain signficantly fewer genes than the input dataframe. This is because the permutation test eliminates these genes prior to regression. This step increases DEGage's specficity. However, if you would like a p-value for each gene, you should set perm.preprocess to FALSE. 
+#### Count simulation with DEGage
