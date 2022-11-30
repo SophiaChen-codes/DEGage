@@ -81,3 +81,8 @@ library(DEGageAP)
 Cellgroups <- factor(c(rep(1,50),rep(2,50)))
 counts <- DEGage_Simulation(ngenes = 18000, ndegs = 2000, cellgroups = Cellgroups)
 ```
+
+## Citation
+Please cite the following article if you use DEGage in your research:
+
+Petrany A., Zhang S. and Chen, Y. DEGage: a General Model-based Method for Detecting Differentially Expressed Genes from scRNA-seq Data. To be submitted. 
