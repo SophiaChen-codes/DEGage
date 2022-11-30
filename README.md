@@ -6,6 +6,9 @@ This package allows for the differential expression analysis of two groups of sc
  
 ## Requirements
 ```
+Version: 0.1.1
+Depends: R(>3.6)
+
 pscl 1.5.5
 MASS 7.3-58.1
 stats 4.2.2
