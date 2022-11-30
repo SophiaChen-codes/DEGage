@@ -1,6 +1,7 @@
 # DEGage
 This package allows for the differential expression analysis of two groups of scRNA-seq count data. It employs a novel family of discrete distributions for describing the difference of two NB distributions (named DOTNB). DEGage take the raw counts of scRNA-seq as inputs, and thus avoid introducing artificially bias in normalization steps in current methods. A workflow is shown as follows.
-![alt text](https://github.com/chenyongrowan/DEGage/DEGageAP/DEGage_Workflow.tif?raw=true)
+
+![alt text](https://github.com/chenyongrowan/DEGage/tree/main/DEGageAP/DEGage_Workflow.tif?raw=true)
 
  
 ## Requirements
