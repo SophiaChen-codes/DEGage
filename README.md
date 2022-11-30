@@ -1,5 +1,6 @@
 # DEGage
-This package allows for the differential expression analysis of two groups of count data based on a difference of two negative binomial distributions. 
+This package allows for the differential expression analysis of two groups of scRNA-seq count data. It employs a novel family of discrete distributions for describing the difference of two NB distributions (named DOTNB). As a normalization free method, DEGage take the raw counts as inputs, and thus avoid introducing artificially bias in normalization steps in current methods.![image](https://user-images.githubusercontent.com/83730164/204882083-1206a699-896d-4329-a88b-703f08fa5539.png)
+ 
 ## Requirements
 ```
 pscl 1.5.5
