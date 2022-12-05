@@ -41,7 +41,16 @@ DEGage <- function(counts, group, perm.preprocess = TRUE, gene.filter.threshold 
   }
 
   #Performs genewise negative binomial regression, generates the df that is to be output with regression parameters
+  library(parallel). ## include the library for parallel computing.
+  cl.cores <- detectCores()   ##detect available cores
+  cl <- makeCluster(getOption("cl.cores", 4));  ##allocate cores to use
+  
   outputdf <- apply(counts, MARGIN = 1, FUN = NB_model_fitting, group = group)
+  ### changed to following if there is row-based iteration, otherwise, use 'parCapply' for column-based iteration.
+  ##outputdf <- parRapply(counts, MARGIN = 1, FUN = NB_model_fitting, group = group)
+  stopCluster() ## exit parallel
+  
+  
   outputdf <- as.data.frame(matrix(unlist(outputdf), nrow = length(outputdf), byrow = TRUE))
   rownames(outputdf) <- rownames(counts)
   colnames(outputdf) <- c("r1", "p1","mu1", "r2", "p2", "mu2")
