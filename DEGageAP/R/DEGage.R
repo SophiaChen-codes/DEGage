@@ -46,8 +46,8 @@ DEGage <- function(counts, group, perm.preprocess = TRUE, gene.filter.threshold 
   cl <- makeCluster(getOption("cl.cores", 4));  ##allocate cores to use
   
   outputdf <- apply(counts, MARGIN = 1, FUN = NB_model_fitting, group = group)
-  ### changed to following if there is row-based iteration, otherwise, use 'parCapply' for column-based iteration.
-  ##outputdf <- parRapply(counts, MARGIN = 1, FUN = NB_model_fitting, group = group)
+  ### changed the above to following if there is row-based iteration.
+  outputdf <- parRapply(counts, MARGIN = 1, FUN = NB_model_fitting, group = group)
   stopCluster() ## exit parallel
   
   
