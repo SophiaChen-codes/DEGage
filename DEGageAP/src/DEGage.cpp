@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cmath>
 #include <Rcpp.h>
+#include <omp.h>. ## this is used for parallel computing
 using namespace Rcpp;
 
 //'permtest
@@ -46,7 +47,8 @@ double permtest(NumericVector genecount, NumericVector group, CharacterVector le
     NumericVector g2;
     double perm;
     double larger = 0.0;
-
+    // following statement used for parallel computing.
+    #pragma omp parallel for
     for (int i = 0; i < nperms; i++) {
         intermediate = sample(genecount, genecount.length(), false);
         g1 = intermediate[Range(0, (genecount.length() / 2) - 1)];
