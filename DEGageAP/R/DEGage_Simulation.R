@@ -3,6 +3,12 @@
 #'A helper function that generates row names for simulation.
 #' @param ngenes the number of total genes
 #' @param ndegs the number of desired differentially expressed genes
+
+library(parallel)
+cl.cores <- detectCores()   #detect available cores
+cl <- makeCluster(getOption("cl.cores", 4));  #allocate cores to use
+### change the following sapply, lapply to parSapply and parLapply accordingly.
+
 gen_rownames <- function(ngenes, ndegs){
   Degnames <- sapply(X = c(1:ndegs), FUN = function(x) paste("DEG",x, sep = ""))
   nondegnames <- sapply(X = c((ndegs+1): ngenes), FUN = function(x) paste("GENE",x, sep = "" ))
