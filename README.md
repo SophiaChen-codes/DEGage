@@ -27,6 +27,8 @@ Tests for differential expression between two groups of count data
 - `perm.preprocess`: A boolean indicating whether a permuation test is used to prefilter genes  
 - `gene.filter.threshold`: A value between 0-1 indicating the maximum proportion of zero counts a gene can have before being filtered out. A value of 1 means only genes with all zero counts are filtered out, where as a value of 0.5 would filter out genes where half the counts are zeros  
 - `nperms`: The number of permutations performed during the permutation test  
+#### Output:
+- A dataframe containing regression parameters, p values, and FDR adjusted p values for each gene
 #### DEGage_Simulation
 ```
 DEgage_Simulation(ngenes, ndegs, cellgroups, lfc = 1, prop.zeros = .3, seed = NULL)
@@ -39,6 +41,8 @@ Simulates counts following a negative binomial distribution with predefined leve
 - `lfc`: The log fold change that differentially expressed genes are up/down regulated by. Can be an integer for uniform expression changes across all degs, or a vector the same length as ndegs that specifies lcf values for each differentially expressed gene  
 - `prop.zeros`: A value between 0-1 that specifies the proportion of dropouts to be added to each gene  
 - `seed`: Specify a seed for random generation to generate a reproducible matrix  
+##### Output
+- A dataframe containing simulated counts where columns represent cells and rows represent genes
 ## Example Usage
 ### Differential Expression Analysis with DEGage
 As an example case, we will use a scRNA-seq dataset from Rao-Ruiz et. al that contains 38 neurons from the denate gyrus of *Mus musculus*. For this study, we would like to examine differential expression between dVenus+/- cells from the fear condtioned (FC) mice.  
