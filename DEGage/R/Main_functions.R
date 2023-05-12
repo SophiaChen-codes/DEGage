@@ -14,7 +14,6 @@
 #'@import SingleR
 
 #'DEGage
-#'#TODO: QC
 #'Tests for pairwise differential expression between two count distributions
 #'@param counts A dataframe with cells as columns and genes as rows.
 #'@param group A factor which assigns conditions to cells as in Deseq2.
