@@ -38,8 +38,10 @@ DEGage <- function(counts, group, perm.preprocess = FALSE,
   outputdf <- data.frame()
 
   #subsampling for large datasets
-  counts <- subsampling(counts, group, nsubsample)[[1]]
-  group <- subsampling(counts, group, nsubsample)[[2]]
+  subsampleres <- subsampling(counts, group, nsubsample)
+  counts <- subsampleres[[1]]
+  group <- subsampleres[[2]]
+  rm(subsampleres)
 
   #configures cores for parallel computing
   cl <- core.config(ncores, nperms, counts, group)
