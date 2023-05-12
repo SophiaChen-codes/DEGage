@@ -3,7 +3,12 @@ This package allows for the differential expression analysis of two groups of sc
 
 ![DEGage Workflow](/DEGage/DEGage_Workflow.png)
 
- 
+## Install
+To install DEGage, copy and paste the following into your R terminal:
+```
+library(devtools)
+install_github("chenyongrowan/DEGage")
+```
 ## Requirements
 ```
 Version: DEGage 0.1.1
