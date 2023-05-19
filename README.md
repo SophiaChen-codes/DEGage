@@ -10,8 +10,8 @@ library(devtools)
 install_github("chenyongrowan/DEGage")
 ```
 ## Documentation
-For detailed documentation, see:   
-https://rpubs.com/aliciaprowan/1041880
+For detailed documentation, see:    
+https://rpubs.com/aliciaprowan/1043456
 
 ## Citation
 Please cite the following article if you use DEGage in your research:
