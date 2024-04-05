@@ -1,4 +1,4 @@
-#Alicia Petrany, draft as of 4.20.2023
+#Alicia Petrany, draft as of 4.5.2024
 #This file contains mathematical components of the model
 
 #'@title NB_model_fitting
@@ -15,16 +15,13 @@ NB_model_fitting <- function(counts, group){
   groupone <- as.numeric(counts[which(group == levels(group)[1])])
   grouptwo <- as.numeric(counts[which(group == levels(group)[2])])
 
-  if((sum(groupone)==0)| (sum(grouptwo) == 0)){
-    output <- data.frame(r1 = NA,
-                         p1 = NA,
-                         mu1 = mean(groupone),
-                         r2 = NA,
-                         p2 = NA,
-                         mu2 = mean(grouptwo),
-                         base.mean = mean(c(groupone, grouptwo)),
-                         row.names = rownames(counts))
-    return(output)
+  if(sum(groupone)==0){
+    #add a single, very small psuedocount so dist can still exist
+    groupone[1] = groupone[1] + 0.00000001
+  }
+  if(sum(grouptwo)==0){
+    #add a single, very small psuedocount so dist can still exist
+    grouptwo[1] = grouptwo[1] + 0.00000001
   }
 
   df1 <- data.frame(counts = as.numeric(groupone))
@@ -79,13 +76,21 @@ ZINB_model_fitting <- function(counts, group){
   groupone <- as.numeric(counts[which(group == levels(group)[1])])
   grouptwo <- as.numeric(counts[which(group == levels(group)[2])])
 
-  if((sum(groupone)==0)| (sum(grouptwo) == 0)| !(0 %in% groupone) | !(0 %in% grouptwo)){
-    output <- data.frame(r1 = NA,
-                         p1 = NA,
-                         r2 = NA,
-                         p2 = NA,
-                         row.names = rownames(counts))
-    return(output)
+  if(sum(groupone)==0){
+    #add a single, very small psuedocount so dist can still exist
+    groupone[1] = groupone[1] + 0.00000001
+  }
+  if(sum(grouptwo)==0){
+    #add a single, very small psuedocount so dist can still exist
+    grouptwo[1] = grouptwo[1] + 0.00000001
+  }
+
+  #if no zeros in row, introduce a random dropout so zinb can be fit
+  if(!(0 %in% groupone)){
+    groupone[sample(c(1:length(groupone)), 1)] <- 0
+  }
+  if(!(0 %in% grouptwo)){
+    grouptwo[sample(c(1:length(grouptwo)), 1)] <- 0
   }
 
   df1 <- data.frame(counts = as.numeric(ceiling(groupone)))
@@ -97,7 +102,7 @@ ZINB_model_fitting <- function(counts, group){
                 error = function(e){return(NA)})
 
   mu1 = mean(groupone)
-  mu2 <- mean(grouptwo)
+  mu2 = mean(grouptwo)
 
   if(is.na(r1)){
     r1 = NA
@@ -119,5 +124,39 @@ ZINB_model_fitting <- function(counts, group){
                        p2 = p2,
                        row.names = rownames(counts))
   return(output)
+}
+
+
+#'@title ZINB_model_fitting
+#'@description
+#'A helper function that performs genewise zero-inflated negative bino mial regression
+#'
+#'@param row counts for a single gene
+#'@param group A factor that contains grouping information for the counts
+#'@return k for each gene
+calculate_k <- function(row, group){
+  meanvec <- c()
+    c2 <- row[group == levels(group)[1]]
+    c1 <- row[group == levels(group)[2]]
+    swap = FALSE
+    if(length(c2) > length(c1)){
+      temp <- c1
+      c1 <- c2
+      c2 <- temp
+      swap = TRUE
+    }
+    if(length(c1) != length(c2)){
+      c1 <- sample(c1, length(c2))
+    }
+    #shuffle
+    c1 <- sample(c1, length(c1))
+    c2 <- sample(c2, length(c2))
+    # calculate k
+    if(swap){
+      meanvec <- c(meanvec, mean(c2-c1))
+    }else{
+      meanvec <- c(meanvec, mean(c1-c2))
+    }
+  return(mean(meanvec))
 }
 
