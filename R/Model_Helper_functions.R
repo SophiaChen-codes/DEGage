@@ -260,10 +260,12 @@ organize_output <- function(outputdf){
   pval <- outputdf$pval
   permPvals <- outputdf$permPvals
   FDR <- outputdf$FDR
+  k <- outputdf$k
 
   outputdf <- outputdf[,1:11]
 
   # outputdf$fit.method <- fit.method
+  outputdf$k <- k
   outputdf$permPvals <- permPvals
   outputdf$pval <- pval
   outputdf$FDR <- FDR
