@@ -1,4 +1,4 @@
-#Alicia Petrany, draft as of 6.28.2023
+#Alicia Petrany, draft as of 5.4.2024
 #This file contains main functions
 #Install on machine with devtools::install()
 
@@ -49,10 +49,14 @@ DEGage <- function(counts, group, perm.preprocess = TRUE,
   #Performs genewise negative binomial regression, generates the df that is to be output with regression parameters
   outputdf <- run.NB.fitting(counts, group, cl)
   outputdf <- run.ZINB.refitting(counts, group, outputdf, cl)
+  message("calculating K")
+  outputdf$k <- as.numeric(apply(counts, FUN = calculate_k, group = group, MARGIN = 1))
   rm(counts)
+
   #Calculates pvals based off of regression parameters calculated above, adds new column to outputdf containing pvals
   message("Calculating pvals")
   outputdf$pval <- cdf_facilitator(outputdf, maxiter)
+
 
   #Adds permutation pvals as output to rows that have not been filtered out
   outputdf$permPvals <- permresultdf$pval[which(permresultdf$gene %in%
@@ -64,7 +68,7 @@ DEGage <- function(counts, group, perm.preprocess = TRUE,
   outputdf$FDR <- p.adjust(outputdf$pval, method = "fdr")
 
   outputdf <- fix_infs(outputdf, mean.ratio)
-
+  outputdf$pval[is.infinite(outputdf$pval)] <- 1
   outputdf <- organize_output(outputdf)
   return(outputdf)
 }
