@@ -16,12 +16,13 @@
 #'@param ncores the number of cores to allocated for parallel computing
 #'@param maxiter The maxiumum number of iterations to perform while calculating the cdf
 #'@param mean.ratio The minimum ratio between the count means for each group for a gene with an incalculable p-value to be considered differentially expressed
+#'@param subsampled.k If true the subsampling procedure is used to estimate k. If false, the random assignment procedure is used.
 #'@return A dataframe containing regression parameters and p-values for each gene
 #'@export
 DEGage <- function(counts, group, perm.preprocess = TRUE,
                    gene.filter.threshold = 1, nperms = 2000,
                    nsubsample = NA, perm.pval = 0.1, ncores = 4,
-                   maxiter = 100, mean.ratio = 1.4){
+                   maxiter = 100, mean.ratio = 1.4, subsampled.k = T){
 
   counts <- parse.input(counts)
   #Quality control of user input
@@ -49,8 +50,15 @@ DEGage <- function(counts, group, perm.preprocess = TRUE,
   #Performs genewise negative binomial regression, generates the df that is to be output with regression parameters
   outputdf <- run.NB.fitting(counts, group, cl)
   outputdf <- run.ZINB.refitting(counts, group, outputdf, cl)
-  message("calculating K")
-  outputdf$k <- as.numeric(apply(counts, FUN = calculate_k, group = group, MARGIN = 1))
+
+  if(subsampled.k){
+    message("calculating K - subsampling")
+    outputdf$k <- as.numeric(apply(counts, FUN = calculate_k_subsample, group = group, MARGIN = 1))
+  }else{
+    message("calculating K - random pairing")
+    outputdf$k <- as.numeric(apply(counts, FUN = calculate_k_random, group = group, MARGIN = 1))
+  }
+
   rm(counts)
 
   #Calculates pvals based off of regression parameters calculated above, adds new column to outputdf containing pvals
@@ -116,12 +124,16 @@ DEGage_preprocess <- function(input, dir.type = 'mtx', min.nFeatureRNA = 200,
 #'@param nsubsample The number of cells to subsample for each condition
 #'@param perm.pval P value for the permutation test to filter out genes with
 #'@param ncores the number of cores to allocated for parallel computing
+#'@param maxiter The maxiumum number of iterations to perform while calculating the cdf
+#'@param mean.ratio The minimum ratio between the count means for each group for a gene with an incalculable p-value to be considered differentially expressed
+#'@param subsampled.k If true the subsampling procedure is used to estimate k. If false, the random assignment procedure is used.
 #'@param writing.dir A directory to write the results of each comparison to. It is HIGHLY reccomended to provide a directory.
 #'@return If a writing directory is not provided, a list of dataframes containing all comparisons is returned
 #'@export
-DEGage_multitest <- function(counts, group, perm.preprocess = FALSE,
+DEGage_multitest <- function(counts, group, perm.preprocess = TRUE,
                              gene.filter.threshold = 1, nperms = 2000,
                              nsubsample = NA, perm.pval = 0.1, ncores = 4,
+                             maxiter = 100, mean.ratio = 1.4, subsampled.k = T,
                              writing.dir = NULL){
 
   #add QC's to check for number of group levels
@@ -142,26 +154,30 @@ DEGage_multitest <- function(counts, group, perm.preprocess = FALSE,
 #'@param input either a dataframe or matrix containing counts, or a path to an mtx directory
 #'@param dir.type the type of directory that a path, if input, is directing to. Default is mtx.
 #'@param celltype.min the minimum number of cells of a given cell type to count as valid.
-#'@param perm.preprocess A logical indicating whether or not to perform the permutation prefiltering step. Setting it to TRUE increases runtimes.
-#'@param gene.filter.threshold A value between 0-1 which represents the maximum proportion of zeros a gene can have before being filtered out.
 #'@param min.nFeatureRNA The minimum number of genes that must be present in a cell
 #'@param max.nFeatureRNA The maxiumum number of genes that can be present in a cell
 #'@param mt.percent A value between 0 and 1 indicating the maximum proporition of mitochondrial genes allowed in a cell
 #'@param cell.annotations A boolean indicating whether or not to perform celltype annotations.
+#'@param perm.preprocess A logical indicating whether or not to perform the permutation prefiltering step. Setting it to TRUE increases runtimes.
+#'@param gene.filter.threshold A value between 0-1 which represents the maximum proportion of zeros a gene can have before being filtered out.
 #'@param nperms An integer greater than 0 that indicates how many permutations will be carried out during the permutation test
-#'@param nsubsample The number of cells to sample for each condition
+#'@param nsubsample The number of cells to subsample for each condition
 #'@param perm.pval P value for the permutation test to filter out genes with
 #'@param ncores the number of cores to allocated for parallel computing
+#'@param maxiter The maxiumum number of iterations to perform while calculating the cdf
+#'@param mean.ratio The minimum ratio between the count means for each group for a gene with an incalculable p-value to be considered differentially expressed
+#'@param subsampled.k If true the subsampling procedure is used to estimate k. If false, the random assignment procedure is used.
 #'@param writing.dir A directory to write the results of each comparison to. It is HIGHLY reccomended to provide a directory.
 #'@return If writing.dir is NULL, a list of dataframes containing the results for each comparison is returned. If a writing directory is provided, nothing is returned.
 #'@export
 DEGage_complete <- function(input, dir.type = 'mtx',
                             min.nFeatureRNA = 200, max.nFeatureRNA = 8000,
                             mt.percent = .2, cell.annotations = TRUE,
-                            celltype.min = 20, perm.preprocess = FALSE,
-                            gene.filter.threshold = 1,
-                            nperms = 2000, nsubsample = NA, perm.pval = 0.1,
-                            ncores = 4, writing.dir = NULL){
+                            celltype.min = 20,  perm.preprocess = TRUE,
+                            gene.filter.threshold = 1, nperms = 2000,
+                            nsubsample = NA, perm.pval = 0.1, ncores = 4,
+                            maxiter = 100, mean.ratio = 1.4, subsampled.k = T,
+                            writing.dir = NULL){
 
   if(is.null(writing.dir)){
     warning("No writing directory was provided. Providing one is strongly recommended")
