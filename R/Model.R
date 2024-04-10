@@ -127,14 +127,46 @@ ZINB_model_fitting <- function(counts, group){
 }
 
 
-#'@title ZINB_model_fitting
+#'@title calculate_k_random
 #'@description
-#'A helper function that performs genewise zero-inflated negative bino mial regression
+#'Calculate k based on the random assignment protocol
 #'
 #'@param row counts for a single gene
 #'@param group A factor that contains grouping information for the counts
 #'@return k for each gene
-calculate_k <- function(row, group){
+calculate_k_random <- function(row, group){
+  c2 <- row[group == levels(group)[1]]
+  c1 <- row[group == levels(group)[2]]
+  swap = FALSE
+  if(length(c2) > length(c1)){
+    temp <- c1
+    c1 <- c2
+    c2 <- temp
+    swap = TRUE
+  }
+  if(length(c1) != length(c2)){
+    c2 <- c(sample(c2, length(c2)),
+            sample(c2, length(c1) - length(c2), replace = TRUE))
+  }
+  #shuffle
+     c1 <- sample(c1, length(c1))
+     c2 <- sample(c2, length(c2))
+  # calculate k
+  if(swap){
+    return(mean(c2-c1))
+  }else{
+    return(mean(c1-c2))
+ }
+}
+
+#'@title calculate_k_random
+#'@description
+#'Calculate k based on the subsampling protocol
+#'
+#'@param row counts for a single gene
+#'@param group A factor that contains grouping information for the counts
+#'@return k for each gene
+calculate_k_subsample <- function(row, group){
   meanvec <- c()
     c2 <- row[group == levels(group)[1]]
     c1 <- row[group == levels(group)[2]]
@@ -155,8 +187,8 @@ calculate_k <- function(row, group){
     if(swap){
       meanvec <- c(meanvec, mean(c2-c1))
     }else{
-      meanvec <- c(meanvec, mean(c1-c2))
-    }
+     meanvec <- c(meanvec, mean(c1-c2))
+   }
   return(mean(meanvec))
 }
 
