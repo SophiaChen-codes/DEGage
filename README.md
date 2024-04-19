@@ -20,7 +20,8 @@ DEGage performs pairwise differential analysis on NGS count data. The input is t
 ```
 DEGage(counts, group, perm.preprocess = TRUE,
        gene.filter.threshold = 1, nperms = 2000,
-       nsubsample = NA, perm.pval = 0.1, ncores = 4)
+       nsubsample = NA, perm.pval = 0.1, ncores = 4,
+       maxiter = 1000, mean.ratio = 1.4, subsampled.k = T)
 ```
 
 ### DEGage_multitest
