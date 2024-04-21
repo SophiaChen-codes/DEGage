@@ -10,7 +10,7 @@ library(devtools)
 install_github("chenyongrowan/DEGage")
 ```
 ## Documentation
-For more detailed documentation, see:    
+For more detailed documentation and tutorials, please see:    
 https://rpubs.com/aliciaprowan/1043456
 
 DEGage contains 5 main functions: DEGage(), DEGage_multitest(), DEGage_preprocess(), DEGage_complete(), and DEGage_Simulation().   
