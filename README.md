@@ -16,7 +16,7 @@ https://rpubs.com/aliciaprowan/1043456
 DEGage contains 5 main functions: DEGage(), DEGage_multitest(), DEGage_preprocess(), DEGage_complete(), and DEGage_Simulation().   
 
 ### DEGage
-DEGage performs pairwise differential analysis on NGS count data. The input is typically a dataframe where columns contain samples and rows contain genes. Counts do not need to be normalized prior to use with DEGage. 
+DEGage performs pairwise differential analysis on NGS count data. The input is typically a dataframe where columns contain samples and rows contain genes. Counts do not need to be normalized prior to use with DEGage. DEGage equips with two sampling strategies, random assignment and subsampling, for handling imbalanced scRNA-seq datasets.
 ```
 DEGage(counts, group, perm.preprocess = TRUE,
        gene.filter.threshold = 1, nperms = 2000,
