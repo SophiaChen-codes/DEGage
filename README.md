@@ -10,7 +10,7 @@ library(devtools)
 install_github("chenyongrowan/DEGage")
 ```
 ## Documentation
-For more detailed documentation and tutorials, please find them on RPubs by RStudio <img src="R_Logo.png" width="30" height="30">:    
+For more detailed documentation and tutorials, please find them on RPubs by RStudio <img src="R_Logo.png" width="20" height="20">:    
 https://rpubs.com/aliciaprowan/1043456
 
 DEGage contains 5 main functions: DEGage(), DEGage_multitest(), DEGage_preprocess(), DEGage_complete(), and DEGage_Simulation().   
