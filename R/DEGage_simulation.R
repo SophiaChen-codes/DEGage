@@ -105,16 +105,29 @@ introduce_dropouts <- function(finaldf, ncells, min.drops, max.drops){
 #'@title DEGage_Simulation
 #'@description
 #'Simulates counts. DEG's are simulated under two conditions
-#'@param ngenes is the number of genes to be simulated total
-#'@param ndegs is the number of genes to be differentially expressed
-#'@param ngroup1 the number of cells in the first group
-#'@param ngroup2 the number of cells in the second group
-#'@param lfc is either an integer or vector with a length of ndegs which dictates log fold change value to adjust means for differentially expressed genes
-#'@param prop.zeros The proportion of 0's to introduce to simulate dropouts. Must be a value between 0 and 1.
-#'@param seed sets a seed for random generation. If user does not input one, a random seed is generated
-#'@param ncores the number of cores to allocated for parallel computing
+#'@param ngenes The number of genes to be simulated total
+#'@param ndegs The number of genes to be differentially expressed
+#'@param ngroup1 The number of cells in the first group
+#'@param ngroup2 The number of cells in the second group
+#'@param lfc Either an integer or vector with a length of ndegs which dictates log fold change value to adjust means for differentially expressed genes
+#'@param min.prop.zeros The minimum proportion of dropouts that are to be introduced for a gene
+#'@param max.prop.zeros The maximum proportion of dropouts that are to be introduced for a gene
+#'@param seed Sets a seed for random generation. If user does not input one, a random seed is generated
+#'@param ncores The number of cores to allocated for parallel computing
+#'@param dispersions An optional integer or vector the length of ngenes+ndegs that sets genewise dispersion values
+#'@param means An optional integer or vector the length of ngenes+ndegs that sets the means for genewise distributions                         
 #'@export
-DEGage_Simulation <- function(ngenes, ndegs, ngroup1, ngroup2, lfc = 1, min.prop.zeros = 0.1, max.prop.zeros = 0.5, seed = NULL, ncores = 4, dispersions = NULL, means = NULL){
+DEGage_Simulation <- function(ngenes, 
+                              ndegs, 
+                              ngroup1, 
+                              ngroup2, 
+                              lfc = 2, 
+                              min.prop.zeros = 0.1, 
+                              max.prop.zeros = 0.5, 
+                              seed = NULL, 
+                              ncores = 4, 
+                              dispersions = NULL, 
+                              means = NULL){
 
   QC_simulation(ngenes, ndegs, ngroup1, ngroup2,
                 lfc, min.prop.zeros, max.prop.zeros,
