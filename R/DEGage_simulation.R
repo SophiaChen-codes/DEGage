@@ -20,7 +20,7 @@ QC_simulation <- function(ngenes, ndegs, ngroup1, ngroup2, lfc, min.prop.zeros, 
   if(length(lfc) != 1  & length(lfc) != ndegs) stop("lfc must be an integer, or a vector the length of ndegs")
   if(min.prop.zeros > 1 & min.prop.zeros < 0) stop("min.prop.zeros must be between 0 and 1")
   if(max.prop.zeros > 1 & max.prop.zeros < 0) stop("max.prop.zeros must be between 0 and 1")
-  if(length(dispersions) != 1  & length(dispersions) != ndegs & !is.null(dispersions)) stop("dispersions must be an integer, or a vector the length of ndegs")
+  if(length(dispersions) != 1  & length(dispersions) != ndegs+ngenes & !is.null(dispersions)) stop("dispersions must be an integer, or a vector the length of ndegs+ngenes")
   if(length(means) != 1  & length(means) != ndegs+ngenes & !is.null(means)) stop("means must be an integer, or a vector the length of ndegs+ngenes")
 }
 
