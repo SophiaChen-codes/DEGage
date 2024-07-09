@@ -24,10 +24,12 @@ A recent MASS update made it incompatible with R versions below 4.4. To install 
 ```
 install.pacakges("path/to/MASS_SOURCE.tar.gz", repos=NULL, type="source")
 ```
-## Differential Expression Functions
-For more detailed documentation and tutorials, please refer to RPubs by RStudio:    
-https://rpubs.com/aliciaprowan/1043456
+## Detailed Documentation And Usage
+For more detailed documentation and tutorials, please refer to the following:    
+For thorough documentation: https://rpubs.com/aliciaprowan/1043456  
+For a basic comparison with other methods: https://rpubs.com/aliciaprowan/1202999  
 
+## Differential Expression Functions
 ### DEGage
 DEGage performs pairwise differential analysis on NGS count data. The input is typically a dataframe where columns contain samples and rows contain genes. DEGage equips with two sampling strategies, random assignment and subsampling, for handling imbalanced scRNA-seq datasets.
 ```
