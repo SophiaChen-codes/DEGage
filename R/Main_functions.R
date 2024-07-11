@@ -51,7 +51,7 @@ DEGage <- function(counts,
   permresultdf <- run.permtest(counts, group, perm.pval, nperms, cl)
 
   if(perm.preprocess){
-   counts <- counts[permresultdf$pval  < perm.pval,]
+   counts <- counts[permresultdf$pval  <= perm.pval,]
   }
 
   #Performs genewise negative binomial regression, generates the df that is to be output with regression parameters
