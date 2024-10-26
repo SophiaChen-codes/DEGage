@@ -123,4 +123,5 @@ multitest.results <- DEGage_multitest(df, cellgroups)
 ```
 ## Citation
 Please cite the following article if you use DEGage in your research:
+
 2.	Alicia Petrany, Ruoyu Chen, Shaoqiang Zhang, and Yong Chen (2024). "Theoretical framework for the difference of two negative binomial distributions and its application in comparative analysis of sequencing data." Genome Research, 2024 Oct. 15 https://doi.org/10.1101/gr.278843.123. PMID: 39406498
